@@ -1,0 +1,218 @@
+<!--<div id="generalPage" class="mainmain" style="">-->
+  <!-- background : structure based on the TIZEN project -->
+  <!--
+  <div id="generalPageBackground" class="background" *ngIf="hasBackground" [style.top]="' ' + this.move + 'rem'" >
+    <img class="image" [src]="backgroundUrl" [class.custom]="isCustom" >
+    <div class="gradient" [class.show]="move !== 0" ></div>
+  </div>
+  -->
+
+  <!-- VIEW: mainPage -->
+  <div id="homePage" main-page class="loading home page">
+
+    <!-- background : structure based on the TIZEN project -->
+    <div id="homePageBackground" class="background" *ngIf="hasBackground" [style.top]="' ' + this.move + 'rem'" >
+      <img class="image" [src]="backgroundUrl" [class.custom]="isCustom" >
+      <!--<div class="gradient" [class.show]="move !== 0" ></div>-->
+    </div>
+
+    <!--
+    Children:
+      "refId": "itemControl",
+      "control": "ItemControl",
+      "classes": [
+        "dev_banner"
+      ],
+      "binding": [
+        "selectedProduct"
+      ]
+    -->
+    <!-- div children [0] of mainPage -->
+    <div id="homePageHeader" class="dev_banner">
+
+              <!-- VIEW: itemControl ==> INI -->
+              <a *ngIf="showHeader(selectedProduct.isSelected)" (click)="goToDetailedProduct(selectedProduct.id)" class="product cover">
+                <!--
+                Children:
+                  "tag": "div",
+                  "classes": [
+                    ""
+                  ],
+                  "children": [
+                    {
+                      "tag": "h1",
+                      "binding": "selectedProduct.name"
+                    },
+                    {
+                      "tag": "h2",
+                      "binding": "selectedProduct.year"
+                    },
+                    {
+                      "tag": "p",
+                      "binding": "selectedProduct.genre"
+                    },
+                    {
+                      "tag": "p",
+                      "binding": "selectedCollection"
+                    }
+                  ]
+                -->
+                <!-- div children [0] of itemControl -->
+                <div class="">
+                  <!--CHILDREN: h1-->
+                  <!--content = bind: name-->
+                  <h1 class="">{{ selectedProduct.name }}</h1>
+                  <!--CHILDREN: h2-->
+                  <!--content = bind: year-->
+                  <h2 class="">{{ selectedProduct.year }}</h2>
+                  <!--CHILDREN: p-->
+                  <!--content = bind: genre-->
+                  <p class="">{{ selectedProduct.genre }}</p>
+                  <!--CHILDREN: p-->
+                  <!--content = bind: collection-->
+                  <p class="">{{ selectedProduct.collection }}</p>
+                </div>
+              </a>
+              <!-- END <== VIEW: itemControl -->
+
+    </div>
+
+    <!--Navigation - temporary controller-->
+    <div id="navigationTempControl" *ngIf="false" class="dev_navigation">
+      id : {{selectedId}} ||||| posX, posY : {{selectedPos.posX}}, {{selectedPos.posY}} <br>
+      <table>
+        <tr>
+          <td><button (click)="gridGoToLeft()">left</button></td>
+          <td><button (click)="gridGoToUp()">up</button></td>
+          <td><button (click)="gridGoToRight()">right</button></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td><button (click)="gridGoToDown()">down</button></td>
+          <td></td>
+        </tr>
+      </table>
+    </div>
+
+    <!--
+    Children:
+      "refId": "stackListControl",
+      "control": "StackListControl",
+      "classes": [],
+      "binding": ["items"],	// temporary renamed for "SwimlaneItems"
+      "variant": "Panel"
+    -->
+    <!-- div children [1] of mainPage -->
+    <div id="homePagePanel" class="dev_panel">
+      <!--Structure lane (in TEST) based from TIZEN project-->
+      <!--
+      <div class="lane">
+        <h2>{{meta.title}}</h2>
+        <div class="row" [class.show]="hasFocus || opaque" [style.margin-left]="meta.mIndex * -43.3 + 'rem'">
+          <app-tile *ngFor="let item of meta.items; let i = index"
+                    [item]="item"
+                    [unique]="unique"
+                    [hasFocus]="hasFocus && app.focus === unique + item.id"
+                    [opaque]="hasFocus || opaque"
+                    [visible]="item.visible"></app-tile>
+        </div>
+      </div>
+      -->
+      <div variant-panel stack-list-control class="StackListControl product-panel grid grid-pad"
+           *ngFor="let collection of items; let index1 = index"
+           [attr.data-index]="index1">
+        <h3>{{ collection.title }}</h3>
+
+        <!--binding : yaml -> items-->
+        <!--it need to be a for => first for of a page: for each model-collection / product-->
+        <!--maybe need to generate a tag/name to indicate which for is it: for-collection?-->
+        <!--everytime we have a list, it will generate a loop with the binding as result for each interation ???-->
+
+        <!-- VIEW: stackListControl ==> INI -->
+        <div model-collection variant-swimlane class="collection swimlane" class="">
+
+          <!--preliminar solution for carousel: if the item has carrousel-control, append this button before, and the nex after-->
+          <!--attention for index1 (index of the ngFor): how to identify which index (which for) to use (it means: index1 or index2?) ?? -->
+          <!--preliminar solution: -->
+          <!--Each item fo json that will generate a for structure must be indicated on the json-->
+          <!--Then, the transpile will generate a index to identify the for-->
+          <!--Then here we can identify the position and use the appropriate ngfor/indexN-->
+          <button class="swimlane-control left" (click)="previous(index1)"><</button>
+          <!--CHILDREN: variant-??? / carrousel-control-->
+          <div class="cover-container">
+            <a variant-x carrousel-control class="col-1-4" *ngFor="let product of collection.list | slice:collection.first:collection.last; let index2 = index" [attr.data-index]="index2"
+               (click)="coverClick(product.id)">
+              <!--(mouseenter)="mouseEnter(product)" (mouseout)="mouseOut()"-->
+
+              <!--binding : yaml -> items-->
+
+              <!--it need to be a for => second for of a page -> first for of each collection: for each model-poduct??-->
+              <!--maybe need to generate a tag/name to indicate which for is it: for-cover?-->
+              <!--everytime we have a list, it will generate a loop with the binding as result for each interation ???-->
+
+              <!--PARENT: model-product / variant-cover-->
+              <div model-product variant-cover class="product cover" [ngClass]="{'has-focus' : product.hasFocus}">
+                <!--CHILDREN: img-->
+                <!--src = bind: coverImage-->
+                <!--action: send item.id to localSelection -> selectedProduct-->
+                <!--<img class="" *ngIf="product.coverImage" [src]="'../../../assets/images/' + product.coverImage"/>-->
+                <img class="" *ngIf="product.coverImage" [src]="'http://gitlab.lvlstudio.com/e2/e2-html/raw/master/Misc/ProductImages/' + product.coverImage"/>
+
+                <!--CHILDREN: h4-->
+                <!--content = bind: product.name-->
+                <h4 class="" *ngIf="!product.coverImage" >{{ product.id }}.{{ product.name }}</h4>
+              </div>
+
+            </a>
+          </div>
+
+          <!--preliminar solution for carousel: if the item has carrousel-control, append this button before, and the nex after-->
+          <button class="swimlane-control right" (click)="next(index1)">></button>
+        </div>
+        <!-- END <== VIEW: stackListControl -->
+
+      </div>
+    </div>
+    <!--CHILDREN: variant-panel / stack-list-control-->
+  </div>
+<!--</div>-->
+
+
+
+<!--FIRST VERSION OF HMTL : -->
+<!--
+    <div header class="banner"></div>
+
+    <h3>TV Shows and Movies</h3>
+    <div class="grid grid-pad">
+      <a *ngFor="let content of movies" class="col-1-4"
+         routerLink="/movie/{{content.id}}">
+        <div class="module">
+          <h4>{{content.name}}</h4>
+        </div>
+      </a>
+    </div>
+
+
+    <h3>Comedies and Sci Fi</h3>
+    <div class="grid grid-pad">
+      <a *ngFor="let content of movies" class="col-1-4"
+         routerLink="/movie/{{content.id}}">
+        <div class="module">
+          <h4>{{content.name}}</h4>
+        </div>
+      </a>
+    </div>
+
+
+    <h3>New Movies</h3>
+    <div class="grid grid-pad">
+      <a *ngFor="let content of movies" class="col-1-4"
+         routerLink="/movie/{{content.id}}">
+        <div class="module">
+          <h4>{{content.name}}</h4>
+        </div>
+      </a>
+    </div>
+-->
+

@@ -1,0 +1,16 @@
+<div *ngIf="movies">
+  <h2>{{ movies.name | uppercase }} </h2>
+  <div class="movie-promo">
+
+  </div>
+  <div>
+    <span appPromo>year: </span>{{movies.year}}
+
+    <span>genre: </span>{{movies.genre}}
+
+    <span>director: </span>{{movies.director}}
+  </div>
+
+  <button (click)="goBack()">go back</button>
+
+</div>
